@@ -18,7 +18,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ..constants import G_ACC, M_RB, light_shift_coefficient
+from ..constants import G_ACC, M_RB, light_shift_coefficient, recoil_energy
 from .beams import Beam, make_beam_pair
 
 
@@ -72,6 +72,9 @@ class TwoBeamLattice:
         self.wavelength = beam_up.wavelength
         self.k = 2.0 * np.pi / self.wavelength
         self.d = self.wavelength / 2.0
+        # lattice depth below which no band can be bound (used to tolerate non-convergence
+        # of the site-surface solver next to field zeros)
+        self.shallow_limit = 0.5 * recoil_energy(self.wavelength, mass)
 
     @classmethod
     def from_config(cls, cfg):
@@ -139,15 +142,26 @@ class TwoBeamLattice:
         else:
             z = np.broadcast_to(np.asarray(z_guess, float), x.shape).astype(float).copy()
         target = 2.0 * np.pi * j
+        z0 = z.copy()
+        conv = np.zeros(x.shape, bool)
         for _ in range(max_iter):
             L = self.local(np.column_stack([x, y, z]), grad=True)
             dz = (L.Phi - target) / L.gPhi[:, 2]
-            z = z - dz
-            if np.max(np.abs(dz)) * self.k < tol:
+            z = z - np.where(conv, 0.0, dz)
+            conv |= np.abs(dz) * self.k < tol
+            if conv.all():
                 break
-        else:
-            raise RuntimeError("site_surface: Newton iteration did not converge")
         L = self.local(np.column_stack([x, y, z]), grad=True)
+        if not conv.all():
+            # Non-convergence only happens next to zeros of one beam's field (higher-order
+            # modes), where the phase jumps by pi.  There the lattice is negligibly shallow;
+            # accept the points (they cannot hold a bound band) but fail anywhere else.
+            bad = ~conv
+            if np.any(L.Ulat[bad] > self.shallow_limit):
+                raise RuntimeError("site_surface: Newton iteration did not converge "
+                                   f"at {bad.sum()} points with non-negligible lattice depth")
+            z[bad] = z0[bad]
+            L = self.local(np.column_stack([x, y, z]), grad=True)
         return z, L
 
     def site_index_near(self, z):

@@ -114,19 +114,25 @@ class EscapeTable:
         return out
 
 
-def escape_table_for(trap, cfg, cache_dir="results/cache", n_max=None):
-    """Build (or load from cache) the escape table covering the trap region."""
+def escape_table_for(trap, cfg, cache_dir="results/cache", n_max=None, slab_sites=75):
+    """Build (or load from cache) the escape table covering the trap region.  By default
+    n_max covers every band that can be bound anywhere in the region (deepest point + 1)."""
     import hashlib
     import json
     from pathlib import Path
-    n_max = n_max or int(trap.tab.n_bound(np.array([trap.s_hi]), trap.tilt)[0])
+    if n_max is None:
+        zz = np.linspace(trap.z_c - trap.z_half, trap.z_c + trap.z_half, 201)
+        L = trap.lat.local(np.column_stack([trap.x_center(zz), 0 * zz, zz]))
+        s_deep = float(np.max(L.Ulat) / trap.ER) * 1.05
+        n_max = int(trap.tab.n_bound(np.array([min(s_deep, trap.s_hi)]), trap.tilt)[0]) + 1
     n_max = min(n_max, trap.tab.n_bands)
     j_min = int(trap.site_index_at(trap.z_c - trap.z_half)[0])
     j_max = int(trap.site_index_at(trap.z_c + trap.z_half)[0])
     d = cfg.to_dict()
     trap_inputs = {"optics": d["optics"], "region": d["region"], "bands": d["bands"],
                    "gravity": d["physics"]["gravity"], "z_center_mm": d["cloud"]["z_center_mm"]}
-    key_src = {"trap": trap_inputs, "n_max": n_max, "j": [j_min, j_max], "v": 2}
+    key_src = {"trap": trap_inputs, "n_max": n_max, "j": [j_min, j_max], "v": 2,
+               "slab": slab_sites}
     key = hashlib.sha256(json.dumps(key_src, sort_keys=True).encode()).hexdigest()[:12]
     path = Path(cache_dir) / f"escape_{key}.npz"
     if path.exists():
@@ -135,7 +141,7 @@ def escape_table_for(trap, cfg, cache_dir="results/cache", n_max=None):
         tab.trap, tab.j_nodes, tab.n_max = trap, zf["j_nodes"], int(zf["n_max"])
         tab.E_rel, tab.z_nodes = zf["E_rel"], zf["z_nodes"]
         return tab
-    tab = EscapeTable(trap, j_min, j_max, n_max)
+    tab = EscapeTable(trap, j_min, j_max, n_max, slab_sites=slab_sites)
     path.parent.mkdir(parents=True, exist_ok=True)
     np.savez(path, j_nodes=tab.j_nodes, n_max=tab.n_max, E_rel=tab.E_rel, z_nodes=tab.z_nodes)
     return tab

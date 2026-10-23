@@ -1,0 +1,279 @@
+{
+  "meta": {
+    "config": {
+      "optics": {
+        "wavelength_nm": 1064.0,
+        "polarizability_au": 687.3,
+        "theta_rad": 0.0,
+        "phase_offset_rad": 0.0,
+        "beam_up": {
+          "power_W": 0.5,
+          "waist_um": 20.0,
+          "waist_z_mm": 0.0,
+          "modes": [
+            {
+              "type": "TEM00"
+            }
+          ]
+        },
+        "beam_down": {
+          "power_W": 0.5,
+          "waist_um": 20.0,
+          "waist_z_mm": 0.0,
+          "modes": [
+            {
+              "type": "TEM00"
+            }
+          ]
+        }
+      },
+      "fiber": {
+        "core_radius_um": null
+      },
+      "cloud": {
+        "z_center_mm": 7.0,
+        "diameter_mm": 2.0,
+        "T0_uK": 4.0,
+        "N0": 100000.0,
+        "distribution": "boltzmann"
+      },
+      "region": {
+        "z_half_mm": 1.25,
+        "rho_factor": 3.0
+      },
+      "physics": {
+        "gravity": true,
+        "collisions": false,
+        "photon_scattering": false,
+        "gamma_bg_per_s": 0.0,
+        "K3_cm6_per_s": 0.0
+      },
+      "bands": {
+        "s_min": 0.001,
+        "s_max": 2000.0,
+        "n_s": 600,
+        "n_bands": 40,
+        "n_planewaves": 60
+      },
+      "collisions": {
+        "n_bands": 16,
+        "cell_slab_um": 100.0,
+        "cell_xy_um": 10.0,
+        "table_s_min": 1.0,
+        "table_s_max": 1000.0,
+        "table_n_s": 48
+      },
+      "numerics": {
+        "n_test": 10000,
+        "dt_us": 25.0,
+        "t_end_ms": 200.0,
+        "record_every": 20,
+        "free_substeps": 10,
+        "seed": 1,
+        "init_slab_um": 40.0,
+        "init_grid": 101,
+        "init_margin_kT": 0.5,
+        "init_band_cut_kT": 12.0
+      },
+      "output": {
+        "results_dir": "results",
+        "label": "simplest"
+      }
+    },
+    "n_sample": 4000
+  },
+  "results": {
+    "baseline": {
+      "Ulat_max_uK": 13.622429592284222,
+      "Voff_at_min_uK": -0.0,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 93.34471896125571,
+      "nu_y_Hz": 93.34471896125571,
+      "E_esc_band0_uK": 13.33099031913233,
+      "E_esc_band1_uK": 13.374484567674576,
+      "release_radius_band0_um": 178.72795822433002,
+      "V0_min_uK": 1.1265237547442772,
+      "depth_band0_uK": 12.204466564388053,
+      "trapped_fraction": 0.1365,
+      "trapped_fraction_err": 0.0054283457424891424,
+      "bound_band_fraction": 0.23625
+    },
+    "theta=0.001": {
+      "Ulat_max_uK": 13.599357796525616,
+      "Voff_at_min_uK": -2.4423862562306287e-18,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 93.18074744238098,
+      "nu_y_Hz": 93.26358163889145,
+      "E_esc_band0_uK": 13.297617898859402,
+      "E_esc_band1_uK": 13.340360904887484,
+      "release_radius_band0_um": 178.69251205746684,
+      "V0_min_uK": 1.125547793928238,
+      "depth_band0_uK": 12.172070104931164,
+      "trapped_fraction": 0.1455,
+      "trapped_fraction_err": 0.005575162553683973,
+      "bound_band_fraction": 0.23925
+    },
+    "theta=0.01": {
+      "Ulat_max_uK": 11.496661163945742,
+      "Voff_at_min_uK": -2.0649519982930113e-10,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 77.5420494899735,
+      "nu_y_Hz": 85.54732997714282,
+      "E_esc_band0_uK": 10.974895899593248,
+      "E_esc_band1_uK": 10.775146444570405,
+      "release_radius_band0_um": 175.2596821952475,
+      "V0_min_uK": 1.032825153199202,
+      "depth_band0_uK": 9.942070746394046,
+      "trapped_fraction": 0.0875,
+      "trapped_fraction_err": 0.0044677665001653785,
+      "bound_band_fraction": 0.18075
+    },
+    "LG10 1% in phase": {
+      "Ulat_max_uK": 14.916389266701389,
+      "Voff_at_min_uK": -0.030727478288454395,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 102.48547871338006,
+      "nu_y_Hz": 102.48547871338006,
+      "E_esc_band0_uK": 14.669074323822455,
+      "E_esc_band1_uK": 14.701961704963065,
+      "release_radius_band0_um": 171.06382882534515,
+      "V0_min_uK": 1.1799939475230135,
+      "depth_band0_uK": 13.489080376299441,
+      "trapped_fraction": 0.16125,
+      "trapped_fraction_err": 0.005814818086148526,
+      "bound_band_fraction": 0.24825
+    },
+    "LG10 1% anti-phase": {
+      "Ulat_max_uK": 12.191903347700372,
+      "Voff_at_min_uK": -0.03755580679451803,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 83.51976117563386,
+      "nu_y_Hz": 83.51976117563386,
+      "E_esc_band0_uK": 11.917821652099795,
+      "E_esc_band1_uK": 11.965661562483875,
+      "release_radius_band0_um": 184.95725891597743,
+      "V0_min_uK": 1.0643576157804342,
+      "depth_band0_uK": 10.85346403631936,
+      "trapped_fraction": 0.10975,
+      "trapped_fraction_err": 0.004942290397680007,
+      "bound_band_fraction": 0.211
+    },
+    "LG10 3% in phase": {
+      "Ulat_max_uK": 15.776011215070033,
+      "Voff_at_min_uK": -0.08511539318470208,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 108.76397224745457,
+      "nu_y_Hz": 108.76397224745457,
+      "E_esc_band0_uK": 15.585059969062318,
+      "E_esc_band1_uK": 15.608873912443952,
+      "release_radius_band0_um": 164.5223512530639,
+      "V0_min_uK": 1.2142404392715334,
+      "depth_band0_uK": 14.370819529790785,
+      "trapped_fraction": 0.1635,
+      "trapped_fraction_err": 0.005847387237048698,
+      "bound_band_fraction": 0.24275
+    },
+    "LG10 3% anti-phase": {
+      "Ulat_max_uK": 11.057063178860705,
+      "Voff_at_min_uK": -0.1207770021307204,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 75.85292771535092,
+      "nu_y_Hz": 75.85292771535092,
+      "E_esc_band0_uK": 10.849260503222332,
+      "E_esc_band1_uK": 10.895359776023472,
+      "release_radius_band0_um": 188.7563350323844,
+      "V0_min_uK": 1.012392468101194,
+      "depth_band0_uK": 9.836868035121139,
+      "trapped_fraction": 0.1025,
+      "trapped_fraction_err": 0.004795668618659967,
+      "bound_band_fraction": 0.20175
+    },
+    "LG10 10% in phase": {
+      "Ulat_max_uK": 17.231161911689142,
+      "Voff_at_min_uK": -0.23899827959433756,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 120.0288334575515,
+      "nu_y_Hz": 120.0288334575515,
+      "E_esc_band0_uK": 17.166916046712327,
+      "E_esc_band1_uK": 17.181035106078564,
+      "release_radius_band0_um": 150.38476946226444,
+      "V0_min_uK": 1.270148719083863,
+      "depth_band0_uK": 15.896767327628462,
+      "trapped_fraction": 0.21,
+      "trapped_fraction_err": 0.006440108694734895,
+      "bound_band_fraction": 0.2855
+    },
+    "LG10 10% anti-phase": {
+      "Ulat_max_uK": 8.61558095465064,
+      "Voff_at_min_uK": -0.4600598794752496,
+      "min_x_um": 0.0,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 59.495825729770935,
+      "nu_y_Hz": 59.495825729770935,
+      "E_esc_band0_uK": 8.711695842317093,
+      "E_esc_band1_uK": 8.743206180240065,
+      "release_radius_band0_um": 194.77043376227277,
+      "V0_min_uK": 0.8906427115836202,
+      "depth_band0_uK": 7.821053130733474,
+      "trapped_fraction": 0.078,
+      "trapped_fraction_err": 0.004240165091125581,
+      "bound_band_fraction": 0.18675
+    },
+    "HG10 1%": {
+      "Ulat_max_uK": 13.619216993437137,
+      "Voff_at_min_uK": -0.00016508387918130244,
+      "min_x_um": 7.212599816869036,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 93.5366508043413,
+      "nu_y_Hz": 93.33407147240824,
+      "E_esc_band0_uK": 13.246409884208132,
+      "E_esc_band1_uK": 13.28588149368062,
+      "release_radius_band0_um": 183.96638670652464,
+      "V0_min_uK": 1.0608673380244875,
+      "depth_band0_uK": 12.185542546183644,
+      "trapped_fraction": 0.137,
+      "trapped_fraction_err": 0.005436703964719801,
+      "bound_band_fraction": 0.2305
+    },
+    "HG10 3%": {
+      "Ulat_max_uK": 13.618638687554174,
+      "Voff_at_min_uK": -0.0005336815393731189,
+      "min_x_um": 9.616799755825392,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 93.9881716811631,
+      "nu_y_Hz": 93.33338418236549,
+      "E_esc_band0_uK": 13.096849476788076,
+      "E_esc_band1_uK": 13.126751693755397,
+      "release_radius_band0_um": 187.04214812943624,
+      "V0_min_uK": 0.9238478224849702,
+      "depth_band0_uK": 12.173001654303107,
+      "trapped_fraction": 0.1305,
+      "trapped_fraction_err": 0.005326109039439579,
+      "bound_band_fraction": 0.22275
+    },
+    "HG10 10%": {
+      "Ulat_max_uK": 13.58813549545631,
+      "Voff_at_min_uK": -0.008049230356780679,
+      "min_x_um": 19.233599511650784,
+      "min_y_um": 0.0,
+      "nu_x_Hz": 95.36274774159737,
+      "nu_y_Hz": 93.25336217668684,
+      "E_esc_band0_uK": 12.587193902071014,
+      "E_esc_band1_uK": 12.501528001753469,
+      "release_radius_band0_um": 191.81656166196967,
+      "V0_min_uK": 0.45859408617565894,
+      "depth_band0_uK": 12.128599815895356,
+      "trapped_fraction": 0.1305,
+      "trapped_fraction_err": 0.005326109039439579,
+      "bound_band_fraction": 0.218
+    }
+  }
+}

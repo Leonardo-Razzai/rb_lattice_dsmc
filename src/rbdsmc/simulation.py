@@ -51,6 +51,10 @@ class Simulation:
         trapped[b] = self.E0[b] < self.escape(self.st.j[b], self.st.n[b])
         self.trapped0 = trapped
         self.recorder = ObservableRecorder(self.trap, self.escape, cfg.cloud.N0, cfg.cloud.kT0)
+        ph = cfg.physics
+        if ph.photon_scattering or ph.gamma_bg_per_s or ph.K3_cm6_per_s:
+            raise NotImplementedError("photon scattering, background-gas and three-body losses "
+                                      "are not implemented yet (see docs/loss_mechanisms.md)")
         self.collider = None
         if cfg.physics.collisions:
             self.collider = Collider(self.trap, cfg, rng_coll, N_eff=cfg.cloud.N0 / self.st.N,
