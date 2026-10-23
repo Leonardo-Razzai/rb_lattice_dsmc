@@ -1,0 +1,12 @@
+__pycache__/
+*.egg-info/
+.pytest_cache/
+results/cache/
+results/runs/
+results/trap/
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.toc

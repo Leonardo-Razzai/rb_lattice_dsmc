@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rbdsmc"
+version = "0.1.0"
+description = "Semiclassical DSMC of ultracold 87Rb in a vertical 1064 nm standing wave above a hollow-core fiber"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pyyaml>=6",
+    "pyarrow>=14",     # Parquet output (step 3)
+    "duckdb>=0.10",    # queries across runs (plotting)
+    "matplotlib>=3.7",
+    "pandas>=2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+snapshots = ["h5py>=3"]
+fast = ["numba>=0.58"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: slower physics validation tests"]

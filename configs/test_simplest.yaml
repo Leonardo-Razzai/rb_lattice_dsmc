@@ -1,0 +1,19 @@
+# Simplest test case: N0 = 1e5, T0 = 4 uK, theta = 0, P = 0.5 W per beam, no collisions,
+# cloud centred at z_c = 7 mm.  Only values that differ from defaults.yaml need to be listed,
+# but the key physical inputs are repeated here for readability.
+optics:
+  theta_rad: 0.0
+  beam_up:   {power_W: 0.5, waist_um: 20.0}
+  beam_down: {power_W: 0.5, waist_um: 20.0}
+cloud:
+  z_center_mm: 7.0
+  diameter_mm: 2.0
+  T0_uK: 4.0
+  N0: 1.0e5
+physics:
+  collisions: false
+numerics:
+  n_test: 10000
+  t_end_ms: 200.0
+output:
+  label: simplest
