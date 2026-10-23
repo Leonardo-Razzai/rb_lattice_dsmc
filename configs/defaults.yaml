@@ -42,6 +42,13 @@ bands:
   n_s: 600
   n_bands: 40
   n_planewaves: 60
+collisions:
+  n_bands: 16
+  cell_slab_um: 100.0
+  cell_xy_um: 10.0
+  table_s_min: 1.0
+  table_s_max: 1000.0
+  table_n_s: 48
 numerics:
   n_test: 10000
   dt_us: 25.0

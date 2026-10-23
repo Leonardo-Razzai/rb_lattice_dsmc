@@ -374,6 +374,17 @@ Bound atoms: velocity Verlet~\cite{Hairer2006} in $V_n$, with $\Delta t\approx T
 \item Convergence in $\Delta t$, $N_\mathrm{test}$, $A_c$ and $K$; seed-to-seed scatter as error bar.
 \end{enumerate}
 
+\subsection{Validation results obtained so far}
+The test suite (\texttt{tests/}) implements the checks above. Representative results:
+\begin{itemize}[leftmargin=*]
+\item Two-beam field: $\Phi$ agrees with Eq.~\eqref{eq:Phi} to $10^{-6}$\,rad; site sag equals $-\rho^2/2R$ to $0.2\%$; at $\theta=10^{-2}$ the depth on the bisector is reduced by $\exp[-(\theta z)^2/(2w^2)]$ and the planes tilt by $\tan(\theta/2)$.
+\item Bands: edges agree with Mathieu characteristic values to $10^{-6}$; the ground-band radial frequency of $V_0$ agrees with $\omega_r\sqrt{\langle\cos^2\rangle_0}$ (corrected by $g/R$) to $0.2\%$.
+\item Initial sampling: band populations, $\langle\rho^2\rangle$, bound fraction and velocity variances agree with direct quadrature of the Boltzmann distribution within statistical errors; no sampler violations.
+\item Collisionless run (0.5\,W, $z_c=7$\,mm, $T_0=4\,\mu$K, $10^4$ test particles, 200\,ms): per-atom energy conserved to $3\times10^{-4}\,k_BT_0$, decreasing as $\Delta t^2$; the bound fraction equals the escape-energy prediction at all times; virial ratio $1.000\pm0.002$; all fractions converged in $\Delta t$ to one test particle in $10^4$.
+\item Golden rule: summed over channels and thermally averaged, the quasi-2D rate exceeds the 3D rate $n\,8\pi a^2\bar v_\mathrm{rel}$ by $24\%$, $8\%$, $2.6\%$ at $k_BT/\hbar\omega_z=1,2,4$, approaching it as $k_BT/\hbar\omega_z\to\infty$ (this fixes $S=2$ and the units of $I$).
+\item DSMC: in a uniform quasi-2D gas the simulated elastic rate equals the golden-rule value ($0.984\pm0.017$); energy, radial momentum and the parity of $\sum n$ are conserved in every collision; a gas prepared with $T_\perp=8\,\mu$K and all atoms in band 0 relaxes to $T_\perp=T_\parallel=4.65\,\mu$K after $\approx 12$ collisions per atom.
+\end{itemize}
+
 %=======================================================================
 \section{Reference scales}
 \label{sec:scales}

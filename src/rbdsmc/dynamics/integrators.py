@@ -40,6 +40,7 @@ class Propagator:
         if len(b):
             e = self.trap.bound_eval(st.x[b], st.y[b], st.j[b], st.n[b], z_guess=st.z[b])
             st.z[b] = e.z
+            st.s[b] = e.s
             st.ax[b], st.ay[b] = (e.F / self.m).T
             st.az[b] = 0.0
             # atoms sampled in a band that is not bound here are released immediately
@@ -71,6 +72,7 @@ class Propagator:
         st.y[b] += dt * st.vy[b]
         e = self.trap.bound_eval(st.x[b], st.y[b], st.j[b], st.n[b], z_guess=st.z[b])
         st.z[b] = e.z
+        st.s[b] = e.s
         st.ax[b], st.ay[b] = (e.F / self.m).T
         st.vx[b] += 0.5 * dt * st.ax[b]
         st.vy[b] += 0.5 * dt * st.ay[b]

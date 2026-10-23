@@ -128,6 +128,17 @@ class BandsConfig:
 
 
 @dataclass(frozen=True)
+class CollisionsConfig:
+    """Band-resolved DSMC (used when physics.collisions is true)."""
+    n_bands: int = 16              # bands included in the overlap table / final channels
+    cell_slab_um: float = 100.0    # sites grouped along z in one collision cell (~190 sites)
+    cell_xy_um: float = 10.0       # transverse cell size
+    table_s_min: float = 1.0       # overlap table depth range (U_lat/E_R)
+    table_s_max: float = 1000.0
+    table_n_s: int = 48
+
+
+@dataclass(frozen=True)
 class NumericsConfig:
     n_test: int = 10000
     dt_us: float = 25.0
@@ -164,6 +175,7 @@ class SimConfig:
     region: RegionConfig = field(default_factory=RegionConfig)
     physics: PhysicsConfig = field(default_factory=PhysicsConfig)
     bands: BandsConfig = field(default_factory=BandsConfig)
+    collisions: CollisionsConfig = field(default_factory=CollisionsConfig)
     numerics: NumericsConfig = field(default_factory=NumericsConfig)
     output: OutputConfig = field(default_factory=OutputConfig)
 

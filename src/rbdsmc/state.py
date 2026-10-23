@@ -47,6 +47,7 @@ class ParticleState:
     ax: np.ndarray            # cached accelerations
     ay: np.ndarray
     az: np.ndarray
+    s: np.ndarray             # local lattice depth U_lat/E_R (BOUND atoms, cached each step)
     n_coll: np.ndarray        # int32 collision counter
     t_event: np.ndarray       # time of the last status change (s); nan if never
     E0: np.ndarray            # energy at t = 0 (J), for diagnostics
@@ -60,7 +61,7 @@ class ParticleState:
     def empty(cls, N: int) -> "ParticleState":
         f = lambda dt=float, val=0.0: np.full(N, val, dtype=dt)     # noqa: E731
         return cls(status=f(np.int8, 0), j=f(np.int64, 0), n=f(np.int16, 0),
-                   x=f(), y=f(), z=f(), vx=f(), vy=f(), vz=f(), ax=f(), ay=f(), az=f(),
+                   x=f(), y=f(), z=f(), vx=f(), vy=f(), vz=f(), ax=f(), ay=f(), az=f(), s=f(),
                    n_coll=f(np.int32, 0), t_event=f(float, np.nan), E0=f(float, np.nan),
                    released_band=f(np.int16, -1), fiber_bound=f(bool, False),
                    entry_rho=f(float, np.nan), entry_vperp=f(float, np.nan),

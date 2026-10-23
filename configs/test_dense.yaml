@@ -1,0 +1,18 @@
+# Denser corner of the parameter space, used to exercise the collisional dynamics:
+# P = 0.8 W per beam, z_c = 5 mm, T0 = 5 uK (eta ~ 8), N0 = 1e6.
+optics:
+  theta_rad: 0.0
+  beam_up:   {power_W: 0.8, waist_um: 20.0}
+  beam_down: {power_W: 0.8, waist_um: 20.0}
+cloud:
+  z_center_mm: 5.0
+  diameter_mm: 2.0
+  T0_uK: 5.0
+  N0: 1.0e6
+physics:
+  collisions: true
+numerics:
+  n_test: 10000
+  t_end_ms: 200.0
+output:
+  label: dense

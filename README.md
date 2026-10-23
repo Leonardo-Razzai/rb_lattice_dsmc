@@ -16,8 +16,8 @@ pip install -e ".[dev]"          # numpy, scipy, pyyaml, pyarrow, duckdb, matplo
 | Folder | Content |
 |---|---|
 | `configs/` | YAML inputs. `defaults.yaml` lists every parameter (units in the key names); other files override only what differs |
-| `src/rbdsmc/physics/` | pure physics: `modes.py` (TEM00, LG, HG, ModeSum), `beams.py`, `lattice_field.py`, `bands.py`, `potentials.py` (semiclassical trap), `escape.py` (escape energies) |
-| `src/rbdsmc/` | `config.py`, `constants.py`, `state.py` (particle arrays, status codes), `initial.py` (Boltzmann / truncated sampling), `dynamics/` (`integrators.py`, `transitions.py`), `diagnostics/` (`observables.py`, `fits.py`), `io/storage.py`, `simulation.py` (time loop) |
+| `src/rbdsmc/physics/` | pure physics: `modes.py` (TEM00, LG, HG, ModeSum), `beams.py`, `lattice_field.py`, `bands.py`, `potentials.py` (semiclassical trap), `escape.py` (escape energies), `scattering.py` (golden-rule rates, overlap table) |
+| `src/rbdsmc/` | `config.py`, `constants.py`, `state.py` (particle arrays, status codes), `initial.py` (Boltzmann / truncated sampling), `dynamics/` (`integrators.py`, `transitions.py`, `dsmc.py` collisions), `diagnostics/` (`observables.py`, `fits.py`), `io/storage.py`, `simulation.py` (time loop) |
 | `scripts/` | entry points that compute and write results (`inspect_trap.py`, `run_single.py`; later `run_scan.py`) |
 | `plotting/` | figure scripts; they read result files only and never import the simulation |
 | `tests/unit/` | fast Level-0/1 tests; `tests/validation/` slower physics checks |
@@ -30,8 +30,14 @@ pytest                                   # or: python tests/run_tests.py  (no py
 python scripts/inspect_trap.py configs/test_simplest.yaml [--set optics.theta_rad=1e-2]
 python plotting/plot_trap.py             # -> results/figures/trap/*.png
 python scripts/run_single.py configs/test_simplest.yaml [--set numerics.t_end_ms=50]
-python plotting/plot_timeseries.py results/runs/<run_id>     # -> results/figures/runs/<run_id>.png
+python plotting/plot_timeseries.py [--log-y|--both] results/runs/<run_id>   # -> results/figures/runs/
+python scripts/run_single.py configs/test_simplest.yaml --set physics.collisions=true
+python plotting/plot_compare.py results/runs/A results/runs/B --name my_comparison [--log-y]
 ```
+
+Collisions are switched on with `physics.collisions: true`; cell sizes and the overlap-table
+range are in the `collisions` section. Band, escape and overlap tables are computed once and
+cached in `results/cache/` (the overlap table takes ~2 min).
 
 Each run folder holds `config.yaml`, `meta.json`, `summary.json`, and the tables `timeseries`,
 `band_populations`, `loss_events`, `summary` (Parquet when `pyarrow` is installed, CSV otherwise).

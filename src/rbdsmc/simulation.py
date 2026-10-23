@@ -18,6 +18,7 @@ import pandas as pd
 from .constants import UK
 from .diagnostics.fits import analyse_decay
 from .diagnostics.observables import ObservableRecorder
+from .dynamics.dsmc import Collider
 from .dynamics.integrators import Propagator
 from .initial import sample_initial, total_energy
 from .io.storage import BACKEND, RunWriter, git_version, run_id_for
@@ -50,9 +51,10 @@ class Simulation:
         trapped[b] = self.E0[b] < self.escape(self.st.j[b], self.st.n[b])
         self.trapped0 = trapped
         self.recorder = ObservableRecorder(self.trap, self.escape, cfg.cloud.N0, cfg.cloud.kT0)
-        if cfg.physics.collisions:
-            raise NotImplementedError("collisions are implemented in step 4")
         self.collider = None
+        if cfg.physics.collisions:
+            self.collider = Collider(self.trap, cfg, rng_coll, N_eff=cfg.cloud.N0 / self.st.N,
+                                     dt=cfg.numerics.dt, cache_dir=cache)
         self.rows, self.pops, self.pop_t = [], [], []
         self.n_coll_interval = 0
         self.t = 0.0
@@ -69,6 +71,12 @@ class Simulation:
     # ------------------------------------------------------------------ loop
     def _record(self, interval):
         row, pops = self.recorder.record(self.t, self.st, self.E0, self.n_coll_interval, interval)
+        if self.collider is not None:
+            iv = self.collider.pop_interval()
+            nR = max(row["f_remaining"] * self.st.N, 1)
+            row["frac_band_changing"] = iv["band_changing"] / iv["collisions"] if iv["collisions"] else np.nan
+            row["released_by_coll_per_s"] = (iv["released"] / self.st.N / interval) if interval else np.nan
+            row["n_coll_interval"] = iv["collisions"]
         self.rows.append(row)
         self.pops.append(pops)
         self.pop_t.append(self.t)
@@ -159,6 +167,15 @@ class Simulation:
         s.update({f"decay_{k}": v for k, v in dec.items()})
         s.update({f"bounddecay_{k}": v for k, v in dec_bound.items()})
         s["max_dE_nocoll_kT"] = float(np.nanmax(ts["max_dE_nocoll_kT"].values))
+        if self.collider is not None:
+            cs = self.collider.stats
+            s.update({f"ntc_{k}": v for k, v in cs.items()})
+            s["ntc_acceptance"] = cs["accepted"] / max(cs["candidates"], 1)
+            s["ntc_violation_fraction"] = cs["violations"] / max(cs["candidates"], 1)
+            s["coll_cells_K_sites"] = self.collider.K
+            s["coll_cell_xy_um"] = self.collider.h * 1e6
+            s["N_eff"] = self.collider.N_eff
+            s["final_mean_ncoll_R"] = float(last["mean_ncoll_R"])
         s.update({f"trap_{k}": v for k, v in self.trap.describe().items()})
         s["setup_time_s"] = self.setup_time
         s["wall_time_s"] = self.wall_time
