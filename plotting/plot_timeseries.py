@@ -3,9 +3,14 @@
 
     python plotting/plot_timeseries.py results/runs/<run_id> [more run dirs ...]
     python plotting/plot_timeseries.py            # every run under results/runs/
+    python plotting/plot_timeseries.py --log-y    # fraction panels on a logarithmic y axis
+    python plotting/plot_timeseries.py --both     # linear and logarithmic versions
 
-Figure saved as results/figures/runs/<run_id>.png
+Figures saved as results/figures/runs/<run_id>.png (linear) and <run_id>_logy.png (log).
+On the log axis, zero values are not drawn and the lower limit is half the fraction one
+test particle represents (1/n_test), the resolution of the simulation.
 """
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -30,7 +35,22 @@ def _line(ax, t, y, i, label, **kw):
     ax.plot(t, y, color=SERIES[i], label=label, **kw)
 
 
-def plot_run(run_dir: Path):
+def _fraction_axis(ax, logy, n_test, linear_top=None):
+    """Linear or logarithmic y axis for panels that show fractions of N0."""
+    if logy:
+        ax.set_yscale("log", nonpositive="mask")
+        floor = 0.5 / n_test
+        ax.set_ylim(floor, 1.5)
+        ax.axhline(1.0 / n_test, color=INK2, lw=0.8, ls=":")
+        ax.text(ax.get_xlim()[0], 1.0 / n_test, " 1 test particle", va="bottom", color=INK2,
+                fontsize=7.5)
+    elif linear_top is not None:
+        ax.set_ylim(0, linear_top)
+    else:
+        ax.set_ylim(0, None)
+
+
+def plot_run(run_dir: Path, logy: bool = False):
     ts = read_table(run_dir, "timeseries")
     bp = read_table(run_dir, "band_populations")
     S = json.loads((run_dir / "summary.json").read_text())
@@ -50,11 +70,12 @@ def plot_run(run_dir: Path):
     a.axhline(S["predicted_trapped_fraction"], color=INK2, lw=0.9, ls="--")
     a.text(t[-1], S["predicted_trapped_fraction"], "predicted plateau ", ha="right", va="bottom",
            color=INK2, fontsize=8)
-    a.set_ylim(0, 1.02)
+    n_test = S["n_test"]
+    _fraction_axis(a, logy, n_test, linear_top=1.02)
     a.set_xlabel("t (ms)")
     a.set_ylabel("fraction of N$_0$")
     a.set_title("(a) Atom fractions")
-    a.legend(loc="center right")
+    a.legend(loc="lower right" if logy else "center right")
 
     # (b) energies per atom of the bound set
     b = ax[1]
@@ -96,6 +117,7 @@ def plot_run(run_dir: Path):
     _line(e, t, ts["f_fiber"], 0, "entered fiber core")
     _line(e, t, ts["f_fiber_bound"], 1, "… radially bound in fiber")
     _line(e, t, ts["f_in_transit"], 4, "in transit", lw=1.4)
+    _fraction_axis(e, logy, n_test)
     e.set_xlabel("t (ms)")
     e.set_ylabel("fraction of N$_0$")
     e.set_title("(e) Atoms falling to the fiber")
@@ -108,6 +130,7 @@ def plot_run(run_dir: Path):
         sel = bp[bp["n"] == n]
         f.plot(sel["t_ms"], sel["fraction"], color=ramp_color(n, nmax), lw=1.6,
                label=f"n = {n}" if n in (0, nmax - 1) else None)
+    _fraction_axis(f, logy, n_test)
     f.set_xlabel("t (ms)")
     f.set_ylabel("fraction of N$_0$")
     f.set_title("(f) Band populations (atoms in a bound band)")
@@ -121,13 +144,23 @@ def plot_run(run_dir: Path):
         f"max |ΔE| (no coll.) = {S['max_dE_nocoll_kT']:.1e} kT",
         x=0.01, ha="left", fontsize=10)
     fig.tight_layout(rect=(0, 0, 1, 0.96))
-    return save(fig, FIGURES / "runs" / f"{run_dir.name}.png")
+    suffix = "_logy" if logy else ""
+    return save(fig, FIGURES / "runs" / f"{run_dir.name}{suffix}.png")
 
 
 def main():
-    runs = [Path(p) for p in sys.argv[1:]] or sorted((RESULTS / "runs").glob("*/"))
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("runs", nargs="*", help="run folders (default: all under results/runs/)")
+    g = ap.add_mutually_exclusive_group()
+    g.add_argument("--log-y", action="store_true", help="logarithmic y axis for fractions")
+    g.add_argument("--both", action="store_true", help="write linear and logarithmic figures")
+    args = ap.parse_args()
+    runs = [Path(p) for p in args.runs] or sorted((RESULTS / "runs").glob("*/"))
+    modes = [False, True] if args.both else [args.log_y]
     for r in runs:
-        print(plot_run(r))
+        for logy in modes:
+            print(plot_run(r, logy=logy))
 
 
 if __name__ == "__main__":
