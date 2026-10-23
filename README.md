@@ -16,8 +16,8 @@ pip install -e ".[dev]"          # numpy, scipy, pyyaml, pyarrow, duckdb, matplo
 | Folder | Content |
 |---|---|
 | `configs/` | YAML inputs. `defaults.yaml` lists every parameter (units in the key names); other files override only what differs |
-| `src/rbdsmc/physics/` | pure physics: `modes.py` (TEM00, LG, HG, ModeSum), `beams.py`, `lattice_field.py`, `bands.py` |
-| `src/rbdsmc/` | `config.py`, `constants.py`; later `state.py`, `initial.py`, `dynamics/`, `diagnostics/`, `io/`, `simulation.py` |
+| `src/rbdsmc/physics/` | pure physics: `modes.py` (TEM00, LG, HG, ModeSum), `beams.py`, `lattice_field.py`, `bands.py`, `potentials.py` (semiclassical trap), `escape.py` (escape energies) |
+| `src/rbdsmc/` | `config.py`, `constants.py`, `state.py` (particle arrays, status codes), `initial.py` (Boltzmann / truncated sampling), `dynamics/` (`integrators.py`, `transitions.py`); later `diagnostics/`, `io/`, `simulation.py` |
 | `scripts/` | entry points that compute and write results (`inspect_trap.py`; later `run_single.py`, `run_scan.py`) |
 | `plotting/` | figure scripts; they read result files only and never import the simulation |
 | `tests/unit/` | fast Level-0/1 tests; `tests/validation/` slower physics checks |

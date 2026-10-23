@@ -26,6 +26,7 @@ cloud:
   diameter_mm: 2.0
   T0_uK: 4.0
   N0: 100000.0
+  distribution: boltzmann
 region:
   z_half_mm: 1.25
   rho_factor: 3.0
@@ -36,9 +37,9 @@ physics:
   gamma_bg_per_s: 0.0
   K3_cm6_per_s: 0.0
 bands:
-  s_min: 1.0
+  s_min: 0.001
   s_max: 2000.0
-  n_s: 400
+  n_s: 600
   n_bands: 40
   n_planewaves: 60
 numerics:
@@ -48,6 +49,10 @@ numerics:
   record_every: 20
   free_substeps: 10
   seed: 1
+  init_slab_um: 40.0
+  init_grid: 101
+  init_margin_kT: 0.5
+  init_band_cut_kT: 12.0
 output:
   results_dir: results
   label: ''

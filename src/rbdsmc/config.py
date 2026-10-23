@@ -77,6 +77,9 @@ class CloudConfig:
     diameter_mm: float = 2.0       # 1/e^2 diameter of the Gaussian axial envelope
     T0_uK: float = 4.0
     N0: float = 1e5
+    # "boltzmann": full Boltzmann distribution over the trap region (includes unbound atoms)
+    # "truncated": Boltzmann restricted to atoms below their escape energy (bound only)
+    distribution: str = "boltzmann"
 
     @property
     def z_center(self) -> float:
@@ -117,9 +120,9 @@ class PhysicsConfig:
 
 @dataclass(frozen=True)
 class BandsConfig:
-    s_min: float = 1.0             # lattice depth range U_lat/E_R of the lookup table
-    s_max: float = 2000.0
-    n_s: int = 400
+    s_min: float = 1e-3            # lattice depth range U_lat/E_R of the lookup table
+    s_max: float = 2000.0          # (shallow end needed for atoms at the beam edge)
+    n_s: int = 600
     n_bands: int = 40
     n_planewaves: int = 60         # plane waves on each side (|l| <= n_planewaves)
 
@@ -132,6 +135,11 @@ class NumericsConfig:
     record_every: int = 20
     free_substeps: int = 10
     seed: int = 1
+    # initial-state sampler (exact rejection from slab-grid proposals)
+    init_slab_um: float = 40.0     # sites within one slab share a proposal grid
+    init_grid: int = 101           # grid nodes per transverse direction
+    init_margin_kT: float = 0.5    # proposal margin; larger = safer, slower
+    init_band_cut_kT: float = 12.0 # bands up to (barrier + this * kT) are sampled
 
     @property
     def dt(self) -> float:

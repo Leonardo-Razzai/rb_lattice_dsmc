@@ -140,7 +140,7 @@ class BandTable:
 
     # -- construction ------------------------------------------------------------
     @classmethod
-    def compute(cls, s_min=1.0, s_max=2000.0, n_s=400, n_bands=40, n_pw=60, n_q=33):
+    def compute(cls, s_min=1e-3, s_max=2000.0, n_s=600, n_bands=40, n_pw=60, n_q=33):
         s_grid = np.exp(np.linspace(np.log(s_min), np.log(s_max), n_s))
         out = {k: np.empty((n_s, n_bands)) for k in ("E_mean", "E_min", "E_max", "dEds")}
         for i, s in enumerate(s_grid):
@@ -152,7 +152,7 @@ class BandTable:
 
     @classmethod
     def load_or_compute(cls, cache_dir="results/cache", **params):
-        defaults = dict(s_min=1.0, s_max=2000.0, n_s=400, n_bands=40, n_pw=60, n_q=33)
+        defaults = dict(s_min=1e-3, s_max=2000.0, n_s=600, n_bands=40, n_pw=60, n_q=33)
         defaults.update(params)
         key = hashlib.sha256(json.dumps(defaults, sort_keys=True).encode()).hexdigest()[:10]
         path = Path(cache_dir) / f"bands_{key}.npz"
