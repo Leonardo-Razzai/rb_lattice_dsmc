@@ -31,6 +31,11 @@ def read_table(run_dir: Path, name: str) -> pd.DataFrame:
     raise FileNotFoundError(f"{name} not found in {run_dir}")
 
 
+def _fmt(v, spec, missing="n/a"):
+    """Format a summary value that may be missing (stored as null for nan/inf)."""
+    return missing if v is None else format(v, spec)
+
+
 def _line(ax, t, y, i, label, **kw):
     ax.plot(t, y, color=SERIES[i], label=label, **kw)
 
@@ -140,8 +145,9 @@ def plot_run(run_dir: Path, logy: bool = False):
     fig.suptitle(
         f"{S['run_id']}:  P = {S['P_up_W']} W, θ = {S['theta_rad']:g}, z$_c$ = {S['z_center_mm']:g} mm, "
         f"T$_0$ = {S['T0_uK']} µK, N$_0$ = {S['N0']:.0e}, {coll}, {S['n_test']} test particles  —  "
-        f"t$_{{1/e}}$ = {S['decay_t_1e']:.1f} ms, plateau {S['decay_f_plateau']:.3f}, "
-        f"max |ΔE| (no coll.) = {S['max_dE_nocoll_kT']:.1e} kT",
+        f"t$_{{1/e}}$ = {_fmt(S['decay_t_1e'], '.1f', 'not reached')}"
+        f"{'' if S['decay_t_1e'] is None else ' ms'}, plateau {_fmt(S['decay_f_plateau'], '.3f')}, "
+        f"max |ΔE| (no coll.) = {_fmt(S['max_dE_nocoll_kT'], '.1e')} kT",
         x=0.01, ha="left", fontsize=10)
     fig.tight_layout(rect=(0, 0, 1, 0.96))
     suffix = "_logy" if logy else ""
