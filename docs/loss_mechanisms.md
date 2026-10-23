@@ -129,3 +129,20 @@ Assessment:
 3. **HOM content as a scan parameter** (ε and intermodal phase), ideally with the true fiber modes projected onto the LG basis; and an estimate of the shot-to-shot atom-number scatter from random intermodal phases.
 4. **State-dependent two-body loss**, if the atoms are not in F = 1.
 5. For θ = 10⁻², the reduced in-fiber depth of the downward beam in the fiber-entry test.
+
+---
+
+## 8. Diagnosis of the measured lifetime (τ ≈ 15 ms after 40 ms) — status 23 Oct 2026
+
+A loss rate of ≈ 67 s⁻¹ on bound atoms is 10³× faster than anything in the simulation (collisionless trap: no late decay; evaporation ≤ 0.03 s⁻¹). Escaping requires ≈ 3–5 µK of heating per atom (200–330 µK/s) or an equivalent direct loss. Information from the experiment so far:
+
+| Fact | Consequence |
+|---|---|
+| Cooling-light detuning +20 Γ: no change in τ | detuned cooling light ruled out (scattering drops ~10×). 400 nW total residual light ≈ 0.02–0.4 µW/cm² gives only ~1–10 photons/s at the molasses detuning. Loophole: a near-resonant component not shifted by the test (repumper for F = 1 atoms; unshifted light leaking past the AOM) |
+| Laser: IPG YLR-20-1064-LP-SF, linewidth < 50 kHz; ΔL ≈ 1 m | laser frequency noise × path imbalance gives ≤ 0.9 µK/s, i.e. τ ~ seconds. Would need ΔL ≈ 15–20 m (check fibre lengths in beam 1: optical path = n·L) |
+| Two DDS channels on one board, shared (internally multiplied) clock; single-pass AOMs; separate RF amplifiers | clock phase noise is common to both beams and cancels in the lattice phase, except for the differential delay τ_d: rejection 4 sin²(π f τ_d) = −51 dB (10 ns), −31 dB (100 ns), −23 dB (0.24 µs, ~1 mm difference of acoustic path in TeO₂), −11 dB (1 µs). With typical DDS output noise (−105 to −125 dBc/Hz at 46 kHz) this gives τ ≳ 100 s. Not the cause, provided both channels run at the same frequency and diffraction order |
+| No intensity stabilisation | lattice depth follows laser RIN plus the AM noise of each RF chain. τ = 15 ms requires ≈ −85 dB/Hz around 2ν_z ≈ 78–106 kHz; a free-running single-frequency fibre laser is usually −110 to −130 dB/Hz, unless a noise peak (seed relaxation oscillation, pump-driver switching) lies there. **Not yet measured — now the leading technical candidate** |
+
+Ranking (pending spectra): (1) intensity noise at 2ν_z (both beams after the AOMs); (2) near-resonant residual light not covered by the detuning test; (3) apparent decay from the imaging window (released atoms draining down the beam at 30–45 ms in the simulation); (4) a mechanical resonance moving the fibre tip near ν_r or 2ν_r; (5) residual RF phase noise (only through channel-specific spurs, different frequencies/phase settings, or the RF amplifiers); (6) vacuum.
+
+Recommended measurements, in order: RIN spectrum of each beam after its AOM, 1–500 kHz; τ versus lattice power (noise heating shortens τ in deeper lattices); mechanical block of all resonant beams; parametric loss spectroscopy (amplitude-modulate one RF channel, scan 60–120 kHz) to measure 2ν_z and calibrate the sensitivity; T(t) of the remaining atoms; split one DDS channel to both AOMs (removes any residual RF contribution).
