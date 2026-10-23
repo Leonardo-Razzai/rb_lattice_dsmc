@@ -98,3 +98,15 @@ def test_energy_reference_and_fiber_test():
     v_esc = np.sqrt(2 * T.U_fiber / M_RB)
     ok, _ = T.fiber_radially_bound(np.array([0.0]), np.array([(1.01 * v_esc) ** 2]))
     assert not ok[0]
+
+
+def test_site_reference_energies():
+    T = trap(0.0)
+    assert np.isclose(T.site_reference_energy(np.array([T.j_c]))[0], T.E_ref, rtol=0,
+                      atol=1e-12 * abs(T.E_ref))
+    # neighbouring sites differ mainly by the gravity energy m g d (plus slow depth change)
+    j = T.j_c + np.array([-1000, 0, 1000])
+    E = T.site_reference_energy(j)
+    z = T.site_z_axis(j)
+    L = T.lat.local(np.column_stack([T.x_center(z), 0 * z, z]))
+    assert np.allclose(E, -L.Ulat + T.mg * z, rtol=1e-9)

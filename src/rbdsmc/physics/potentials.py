@@ -68,6 +68,14 @@ class SemiclassicalTrap:
         zc, Lc = self.lat.site_surface(np.array([self.x_center(self.z_c)]), np.array([0.0]), self.j_c)
         self.E_ref = float(Lc.Voff[0] - Lc.Ulat[0] + self.mg * zc[0])
         self.z_site_c = float(zc[0])
+        # per-site reference energies (classical minimum of each site) over the trap region
+        margin = 0.1e-3
+        j_lo = int(self.site_index_at(self.z_c - self.z_half - margin)[0])
+        j_hi = int(self.site_index_at(self.z_c + self.z_half + margin)[0])
+        self._jref = np.arange(j_lo, j_hi + 1)
+        zj = self.site_z_axis(self._jref)
+        zj, Lj = self.lat.site_surface(self.x_center(zj), np.zeros_like(zj), self._jref, z_guess=zj)
+        self._Eref = Lj.Voff - Lj.Ulat + self.mg * zj
 
     # ------------------------------------------------------------------ geometry
     def x_center(self, z):
@@ -94,6 +102,15 @@ class SemiclassicalTrap:
     def site_index_at(self, z):
         z = np.atleast_1d(np.asarray(z, float))
         return self.lat.site_index(np.column_stack([self.x_center(z), np.zeros_like(z), z]))
+
+    def site_reference_energy(self, j):
+        """Classical minimum of V in site j (J): V_off - U_lat + m g z on the centre line.
+        Energies 'in the trap' are measured from this per-site reference."""
+        j = np.asarray(j, np.int64)
+        k = j - self._jref[0]
+        if np.any(k < 0) or np.any(k >= len(self._jref)):
+            raise ValueError("site outside the tabulated trap region")
+        return self._Eref[k]
 
     # ------------------------------------------------------------------ bands
     def _s(self, Ulat):
@@ -161,6 +178,6 @@ class SemiclassicalTrap:
         return {
             "E_R_nK": self.ER / KB * 1e9, "tilt_ER": self.tilt,
             "Ulat_center_uK": float(L.Ulat[0] / UK), "site_center": self.j_c,
-            "E_ref_uK": self.E_ref / UK, "U_fiber_uK": self.U_fiber / UK,
+            "E_ref_center_uK": self.E_ref / UK, "U_fiber_uK": self.U_fiber / UK,
             "a_core_um": self.a_core * 1e6,
         }

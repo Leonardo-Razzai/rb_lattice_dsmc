@@ -123,7 +123,10 @@ def escape_table_for(trap, cfg, cache_dir="results/cache", n_max=None):
     n_max = min(n_max, trap.tab.n_bands)
     j_min = int(trap.site_index_at(trap.z_c - trap.z_half)[0])
     j_max = int(trap.site_index_at(trap.z_c + trap.z_half)[0])
-    key_src = {"cfg": cfg.hash(), "n_max": n_max, "j": [j_min, j_max], "v": 1}
+    d = cfg.to_dict()
+    trap_inputs = {"optics": d["optics"], "region": d["region"], "bands": d["bands"],
+                   "gravity": d["physics"]["gravity"], "z_center_mm": d["cloud"]["z_center_mm"]}
+    key_src = {"trap": trap_inputs, "n_max": n_max, "j": [j_min, j_max], "v": 2}
     key = hashlib.sha256(json.dumps(key_src, sort_keys=True).encode()).hexdigest()[:12]
     path = Path(cache_dir) / f"escape_{key}.npz"
     if path.exists():
