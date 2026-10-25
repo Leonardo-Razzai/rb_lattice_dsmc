@@ -10,6 +10,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,decorations.pathmorphing}
 \usepackage{enumitem}
+\usepackage{array}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=green!40!black,urlcolor=blue!60!black]{hyperref}
 
 \sisetup{separate-uncertainty=true,range-phrase=--}
@@ -343,6 +344,220 @@ Kinetic theory of evaporation~\cite{Ketterle1996,Luiten1996} gives, for a trunca
 For the low-$\eta$ regime and non-ergodic traps, DSMC avoids the truncated-Boltzmann and ergodicity assumptions made in rate-equation models such as Ref.~\cite{Yan2011}.
 
 %=======================================================================
+\section{Technical noise, heating and other loss mechanisms}
+\label{sec:noise}
+%=======================================================================
+
+The model of Secs.~\ref{sec:semiclassical}--\ref{sec:collisions} is conservative apart from collisions: without collisions the bound fraction is exactly constant after the initial transient, and collisional evaporation removes at most $\sim\!3\times10^{-2}\,\mathrm{s^{-1}}$ of the bound atoms even in the densest configuration considered. A measured lifetime of $\tau\approx\SI{15}{ms}$ after \SI{40}{ms} (loss rate $\approx\SI{67}{s^{-1}}$) therefore points to a one-body process outside the model: technical noise of the trapping light, residual resonant light, background gas, or an artefact of the detection. This section collects the relevant physics, gives the scaling with the trap parameters, and evaluates each mechanism for the present apparatus.
+
+\subsection{Conventions and reference numbers}
+All spectral densities are one-sided and per unit frequency, $\langle\xi^2\rangle=\int_0^\infty S_\xi(f)\,\dd f$. Phase noise quoted as single-sideband $\mathcal L(f)$ (dBc/Hz) corresponds to $S_\varphi=2\times10^{\mathcal L/10}$. Unless stated otherwise, numbers refer to the reference trap ($P=\SI{0.5}{W}$ per beam, $z_c=\SI{7}{mm}$, $\theta=0$): $\Ulat=\SI{13.6}{\micro K}$, band spacing $\nu_z=(E_1-E_0)/h=\SI{45.9}{kHz}$, band-0 radial frequency $\nu_r=\SI{93.3}{Hz}$, band-0 escape energy \SI{12.2}{\micro K} above the site minimum. The bound atoms have a mean energy of \SI{9.2}{\micro K}, so an energy $\Delta E\approx3$--\SI{4}{\micro K} per atom must be supplied to empty the trap. For heating that is linear in time the trap empties on a time scale
+\begin{equation}
+\tau\approx\Delta E/\dot E ,
+\label{eq:tau_heat}
+\end{equation}
+and $\tau\approx\SI{15}{ms}$ requires $\dot E\approx\SI{200}{\micro K\,s^{-1}}$.
+
+\subsection{Heating rates}
+\paragraph{Harmonic trap.} For a trap of frequency $\nu$ whose centre fluctuates by $\epsilon_x(t)$, or whose spring constant fluctuates by a fraction $\epsilon(t)$~\cite{Savard1997,Gehm1998,Jauregui2001},
+\begin{align}
+\dot E &= 4\pi^4 m\,\nu^4\,S_x(\nu) \;=\; \tfrac14\,m\,\omega^4 S_x(\nu) && \text{(position noise, linear in $t$),} \label{eq:heat_pos}\\
+\dot E &= \pi^2\nu^2\,S_\epsilon(2\nu)\,E \;\equiv\;\Gamma_\epsilon E && \text{(intensity noise, exponential).} \label{eq:heat_int}
+\end{align}
+Each degree of freedom is heated independently, with its own frequency.
+
+\paragraph{Band-resolved form.} For a perturbation $H'(t)=\xi(t)\,\hat W$ the golden rule gives the transition rate between axial bands
+\begin{equation}
+\Gamma_{n\to n'}=\frac{|\langle n'|\hat W|n\rangle|^2}{2\hbar^2}\;S_\xi\!\left(\frac{|E_{n'}-E_n|}{h}\right),
+\label{eq:golden_noise}
+\end{equation}
+with $\hat W=-\partial_\xi V_\mathrm{lat}$ for a lattice translation (odd $\Delta n$, mainly $n\to n\pm1$) and $\hat W=V_\mathrm{lat}$ for depth noise (even $\Delta n$, mainly $n\to n\pm2$). In the harmonic limit Eq.~\eqref{eq:golden_noise} reproduces Eqs.~\eqref{eq:heat_pos}--\eqref{eq:heat_int}, e.g.\ $\Gamma_{n\to n+1}=m\omega^3(n+1)S_x(\nu)/(4\hbar)$. In the lattice the band spacing decreases with $n$ (Eq.~\eqref{eq:anharm}), so the higher bands sample the noise spectrum at lower frequencies, and atoms in the top bound bands are promoted directly into free bands.
+
+\paragraph{Narrow lines and coherent drive.} A sinusoidal displacement of amplitude $x_0$ at the trap frequency drives each atom coherently,
+\begin{equation}
+A(t)=\tfrac12\,\omega x_0\, t,\qquad E(t)=\tfrac18\,m\,\omega^4 x_0^2\,t^2 ,
+\label{eq:coherent}
+\end{equation}
+until detuning (anharmonicity, the spread of $\nu_r$ over bands and sites) dephases the drive. Loss then starts late and is non-exponential. A resonance of quality factor $Q$ at $f$ rings for $\tau_\mathrm{ring}=Q/(\pi f)$ after an impulsive excitation (e.g.\ a shutter firing at the start of the hold).
+
+\subsection{Noise sources and their transfer to the atoms}
+
+\paragraph{Lattice phase (axial position).} A relative phase change $\delta\varphi$ of the two beams translates the lattice by $\delta z=\delta\varphi/(2k)$, so with Eq.~\eqref{eq:heat_pos}
+\begin{equation}
+\dot E_z=\frac{\pi^4 m\,\nu_z^4}{k^2}\,S_\varphi(\nu_z)\qquad\bigl(=1.3\times10^{11}\,\mu\mathrm K\,\mathrm s^{-1}\ \text{per rad}^2/\mathrm{Hz}\ \text{in the reference trap}\bigr).
+\end{equation}
+Only noise near $\nu_z=30$--\SI{80}{kHz} matters; acoustic path-length noise of the optics is adiabatic. Three electronic or optical sources reach this band:
+\begin{enumerate}[leftmargin=*]
+\item \emph{Laser frequency noise and path imbalance} $\Delta L$ (optical path, $n\times$ length in fibres): $S_\varphi=(2\pi\Delta L/c)^2 S_\nu$, valid for $f\ll c/\Delta L$. White frequency noise with Lorentzian FWHM $\Delta\nu_L$ has $S_\nu=\Delta\nu_L/\pi$.
+\item \emph{RF phase of the AOMs.} An AOM imprints its RF phase on the diffracted light; for single passes $\delta\varphi_\mathrm{lat}=\pm\delta\varphi_\mathrm{RF,1}\mp\delta\varphi_\mathrm{RF,2}$ (double pass: $\times2$). If both channels derive from one clock, $\varphi_{\mathrm{RF},i}(t)=\varphi_c(t-\tau_i)+\varphi_i(t)$, the clock contribution is rejected by
+\begin{equation}
+R(f)=4\sin^2(\pi f\tau_d),\qquad \tau_d=\tau_1-\tau_2 ,
+\end{equation}
+($-51$, $-31$, $-23$, $-11$\,dB at \SI{46}{kHz} for $\tau_d=10$, 100, 240, \SI{1000}{ns}; \SI{240}{ns} corresponds to a \SI{1}{mm} difference of acoustic path in TeO$_2$). Channel-specific spurs and amplifier noise $\varphi_i$ are not rejected.
+\item \emph{Mechanical path-length noise} $\delta L$ of one arm gives $\delta\varphi=k\,\delta L$; it is negligible above a few kHz.
+\end{enumerate}
+
+\paragraph{Lattice depth (intensity).} Since $\Ulat\propto\sqrt{I_1I_2}$, fractional fluctuations add as $\epsilon_\mathrm{lat}=(\epsilon_1+\epsilon_2)/2$. Laser intensity noise is common to both beams ($S_{\epsilon,\mathrm{lat}}=S_\mathrm{RIN}$); amplitude noise of the two RF chains is independent and contributes $(S_\mathrm{AM,1}+S_\mathrm{AM,2})/4$. Axial parametric heating requires noise at $2\nu_z$ (60--\SI{160}{kHz}); radial at $2\nu_r$ (100--\SI{460}{Hz}), where the tolerance is $\sim50$\,dB higher. A static offset $\Delta_0$ between the beam axes converts relative pointing into depth noise, $\epsilon_\mathrm{lat}\approx-\Delta_0\,\delta\Delta/w^2$.
+
+\paragraph{Trap-centre position (radial pointing).} For equal waists the lattice centre is the midpoint of the two beam axes,
+\begin{equation}
+\delta x_c=\tfrac12(\delta x_1+\delta x_2),\qquad \dot E_r=4\pi^4 m\,\nu_r^4\,S_{x_c}(\nu_r)\quad\bigl(=310\,\mu\mathrm K\,\mathrm s^{-1}\ \text{per}\ \mu\mathrm m^2/\mathrm{Hz}\bigr).
+\end{equation}
+The downward beam is focused by a lens of focal length $f$ onto the facet; the atoms are $z_c\ll f$ above the focus. For a collimated input beam the focus, and hence beam~2 at the atoms, sits at
+\begin{equation}
+x_2\simeq x_\mathrm{lens,\perp}+f\,\alpha_\mathrm{in}+\mathcal O(z_c/f),
+\end{equation}
+which gives the transfer coefficients of Table~\ref{tab:transfer}. Acoustic frequencies are far below $\nu_z$, so pointing noise heats only the radial motion.
+
+\begin{table}[h]
+\centering
+\caption{Transfer of mechanical motion to the beam axes at the atoms. Mirror tilt by $\delta\phi$ deflects the beam by $2\delta\phi$ ($2\delta\phi\cos\theta_i$ out of the plane of incidence); $L$ is the mirror--lens distance and $r_p$ the distance from a rotation axis to the atoms.}
+\label{tab:transfer}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{9.2cm}@{}}
+\toprule
+motion & beam displacement at the atoms \\
+\midrule
+mirror tilt $\delta\phi$ (beam 2) & $\delta x_2=2D\,\delta\phi$, $D=f-z_c+Lz_c/f\approx f$; angle $2\delta\phi(1-L/f)$ \\
+lens translation $\delta l$ & $\delta x_2=\delta l\,(1-z_c/f)\approx\delta l$ \\
+rigid translation $\delta b$ of a board carrying mirrors and lens & $\delta x_2=\delta b$ \\
+rigid rotation $\delta\beta$ of that board & $\delta x_2\approx(r_p\ \ldots\ 2f+r_p)\,\delta\beta$ \\
+fibre-tip translation $\delta x_f$ / tilt $\delta\psi$ (beam 1) & $\delta x_1=\delta x_f+z_c\,\delta\psi$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Mechanical response.} Mounts, posts, boards and the free end of the fibre are modelled as single resonances driven by the acceleration $a$ of their support. Useful relations~\cite{Timoshenko}:
+\begin{align}
+&\text{tilt of a mount:} && \delta\phi(f)=\frac{a(f)/\ell}{(2\pi)^2\,(f_m^2-f^2+\ii f f_m/Q)},\qquad \tfrac1\ell=\tfrac{3}{2h}\ \text{(post of height $h$)},\\
+&\text{relative displacement:} && \delta x(f)=\frac{a(f)}{(2\pi)^2\,(f_m^2-f^2+\ii f f_m/Q)}\quad\text{(board sway, fibre tip)},\\
+&\text{isolator transmissibility:} && T(f)=\sqrt{\frac{1+(2\zeta f/f_0)^2}{(1-f^2/f_0^2)^2+(2\zeta f/f_0)^2}}\;\xrightarrow{f\gg f_0}\;\frac{f_0^2}{f^2}\ \text{or}\ \frac{2\zeta f_0}{f},\\
+&\text{raised board on $N$ posts:} && f_b=\frac1{2\pi}\sqrt{\frac{N k_\mathrm{post}}{M}},\qquad k_\mathrm{post}=\frac{3EI}{H^3}\ \ldots\ \frac{12EI}{H^3},\\
+&\text{cantilevered fibre end:} && f_1=\frac{1.875^2}{2\pi\,l^2}\sqrt{\frac{EI}{\rho A}},\qquad I=\frac{\pi d^4}{64}.
+\end{align}
+On resonance the response is enhanced by $Q$ over the quasi-static value; chained resonances (board sway driving a mirror-mount resonance) multiply their gains. A bare fibre end in vacuum has no air damping, $Q\sim10^3$--$10^4$.
+
+\paragraph{Residual resonant light.} The scattering rate is $R=\frac\Gamma2\,s/(1+s+4\Delta^2/\Gamma^2)$ and each scattering event deposits $\approx2E_R^{(780)}=\kB\times\SI{0.36}{\micro K}$ on average. Emptying the trap needs $N_\mathrm{ph}\approx\Delta E/(2E_R^{(780)})\approx10$--35 photons per atom (fewer for directed kicks, plus optical pumping into untrapped or lossy states). For $\tau=\SI{15}{ms}$ this requires $\sim\!0.1\,\mu\mathrm W/\mathrm{cm^2}$ of resonant light.
+
+\paragraph{Other channels.} Background gas gives $\dot N=-N/\tau_\mathrm{vac}$; scattering of the trap light ($\Gamma_\mathrm{sc}\lesssim\SI{0.3}{s^{-1}}$) heats by $\lesssim\SI{0.03}{\micro K\,s^{-1}}$~\cite{Gerbier2010}; three-body loss is $\lesssim\SI{0.04}{s^{-1}}$; hyperfine-changing collisions are negligible in $F=1$ and at most $\sim\mathrm{s^{-1}}$ for an $F=2$ mixture at the highest densities.
+
+\subsection{Scaling with the trap parameters}
+In the far field $\Ulat\propto P/z^2$, $\nu_z\propto\sqrt{\Ulat}\propto\sqrt P/z$ and $\nu_r\propto\sqrt{\Ulat}/w\propto\sqrt P/z^2$. With $\Delta E\propto\Ulat$ and Eqs.~\eqref{eq:tau_heat}--\eqref{eq:heat_int}:
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+mechanism & heating rate & time to empty the trap \\
+\midrule
+lattice phase noise & $\dot E\propto \nu_z^4S_\varphi\propto P^2z^{-4}S_\varphi(\nu_z)$ & $\tau\propto z^2/[P\,S_\varphi(\nu_z)]$ \\
+pointing noise & $\dot E\propto \nu_r^4S_x\propto P^2z^{-8}S_x(\nu_r)$ & $\tau\propto z^6/[P\,S_x(\nu_r)]$ \\
+intensity noise (axial) & $\Gamma\propto\nu_z^2S_\epsilon\propto (P/z^2)\,S_\epsilon(2\nu_z)$ & $\tau\propto z^2/[P\,S_\epsilon(2\nu_z)]$ \\
+residual resonant light & $\dot E$ independent of $P$ & $\tau\propto\Ulat\propto P/z^2$ \\
+background gas & --- & $\tau=\tau_\mathrm{vac}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Technical noise therefore shortens $\tau$ in deeper lattices (higher $P$, lower $z_c$), resonant light lengthens it, and background gas does not change it: measuring $\tau(P)$ separates the three classes. A structured spectrum (a mechanical or electronic line) adds a non-monotonic dependence as $\nu_r$ or $\nu_z$ is tuned across it. Static perturbations that reduce the depth (Sec.~\ref{sec:noise_static}) reduce the trapped number but, for a given noise spectrum, slightly increase $\tau$ ($\tau\propto1/\Ulat$ for white noise). The tolerances computed below follow these scalings: e.g.\ the phase-noise tolerance changes by $20\log_{10}(0.8/0.3)=8.5$\,dB between \SI{0.3}{W} and \SI{0.8}{W} and by $40\log_{10}(8/5)=8.2$\,dB between \SI{5}{mm} and \SI{8}{mm}.
+
+\subsection{Tolerable noise levels across the parameter space}
+Table~\ref{tab:noise_tol} lists the noise levels at which each mechanism heats by $10\%$ of $\kB\times\SI{4}{\micro K}$ per degree of freedom in \SI{200}{ms} (\texttt{scripts/analyse\_noise.py}); harmonic formulas at the band-0 frequencies. Levels $\approx20$\,dB (intensity, phase) or $\approx11\times$ in amplitude (pointing) above these give $\tau\approx\SI{15}{ms}$.
+
+\begin{table}[h]
+\centering
+\caption{Tolerable noise ($10\%$ of $\kB\times4\,\mu$K in 200\,ms). RIN in dB/Hz, phase noise in dB\,rad$^2$/Hz, path noise of one arm in pm/$\sqrt{\mathrm{Hz}}$, trap-centre jitter in nm/$\sqrt{\mathrm{Hz}}$.}
+\label{tab:noise_tol}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}cccccccccc@{}}
+\toprule
+$P$ & $z_c$ & $\Ulat$ & $\nu_z$ & $\nu_r$ & RIN & RIN & $S_\varphi$ & path & $x_c$ \\
+(W) & (mm) & (\si{\micro K}) & (kHz) & (Hz) & @\,$2\nu_z$ & @\,$2\nu_r$ & @\,$\nu_z$ & @\,$\nu_z$ & @\,$\nu_r$ \\
+\midrule
+0.3 & 5 & 15.6 & 49.2 & 138 & $-107$ & $-56$ & $-109$ & 0.58 & 37 \\
+0.3 & 7 & 8.2 & 35.0 & 72 & $-104$ & $-50$ & $-103$ & 1.14 & 136 \\
+0.3 & 8 & 6.3 & 30.4 & 55 & $-103$ & $-48$ & $-101$ & 1.51 & 232 \\
+0.5 & 5 & 26.0 & 64.2 & 180 & $-109$ & $-58$ & $-114$ & 0.34 & 22 \\
+\textbf{0.5} & \textbf{7} & \textbf{13.6} & \textbf{45.9} & \textbf{93} & $\mathbf{-106}$ & $\mathbf{-52}$ & $\mathbf{-108}$ & \textbf{0.67} & \textbf{80} \\
+0.5 & 8 & 10.5 & 40.0 & 72 & $-105$ & $-50$ & $-106$ & 0.88 & 136 \\
+0.8 & 5 & 41.6 & 81.8 & 228 & $-111$ & $-60$ & $-118$ & 0.21 & 14 \\
+0.8 & 7 & 21.8 & 58.6 & 119 & $-108$ & $-54$ & $-112$ & 0.41 & 50 \\
+0.8 & 8 & 16.8 & 51.2 & 91 & $-107$ & $-52$ & $-110$ & 0.54 & 84 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Static perturbations that change the trap}
+\label{sec:noise_static}
+These do not cause a late decay by themselves but change the trapped fraction and the trap frequencies (\texttt{scripts/analyse\_perturbations.py}, reference trap):
+\begin{itemize}[leftmargin=*]
+\item \emph{Crossing angle.} The relevant scale is the divergence $\theta_\mathrm{div}=\lambda/(\pi w_0)=\SI{16.9}{mrad}$; on the bisector $\Ulat$ is reduced by $\exp[-(\theta/\theta_\mathrm{div})^2/2]$. At $\theta=10^{-3}$ nothing changes; at $\theta=10^{-2}$ the depth drops by $16\%$, $\nu_r$ becomes $77.5/85.5$\,Hz and the collisionless trapped fraction drops from 0.137 to 0.087.
+\item \emph{Higher-order modes of the fibre output.} A mode admixture of power fraction $\varepsilon$ changes the field by $\sqrt\varepsilon$, hence $\Ulat$ by $\approx\pm\sqrt\varepsilon$ with a sign set by the intermodal phase at the cloud. $1\%$ of LG$_{10}$ changes the depth by $\pm10\%$ and the trapped fraction by $-20\%$\ldots$+18\%$; $1\%$ of HG$_{10}$ (LP$_{11}$-like) displaces the lattice centre by $\approx\SI{7}{\micro m}$ with no change of depth. Drifts of the intermodal phase therefore appear as slow or shot-to-shot variations of the atom number; fast fluctuations $\delta\varphi_m$ convert into depth noise $S_\epsilon\approx\varepsilon\,S_{\varphi_m}$ (symmetric modes) or pointing $S_x\approx(\varepsilon w^2/4)S_{\varphi_m}$ (odd modes).
+\end{itemize}
+
+\subsection{Application to the present apparatus}
+\label{sec:noise_case}
+The observed loss ($\tau\approx\SI{15}{ms}$ after \SI{40}{ms}) requires $\dot E\approx\SI{200}{\micro K\,s^{-1}}$ or an equivalent direct loss. Table~\ref{tab:case} evaluates each mechanism with the information available (status: 25 October 2026).
+
+\begin{table}[p]
+\centering
+\caption{Mechanisms evaluated for the present apparatus (reference trap). Estimates give the level needed for $\tau\approx15$\,ms.}
+\label{tab:case}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+mechanism & input & estimate & status \\
+\midrule
+detuned cooling light & 400\,nW cooler + repumper; $+20\,\Gamma$ detuning: no change of $\tau$ & 0.6--11 photons/s at $-10\,\Gamma$ over 1--18\,cm$^2$ $\Rightarrow\tau\gtrsim\SI{1}{s}$ & excluded (loophole: resonant repumper or AOM leakage) \\
+laser frequency noise & IPG YLR-20-1064-LP-SF, $\Delta\nu_L<\SI{50}{kHz}$; $\Delta L\approx\SI{1}{m}$ & $S_\varphi\le-111.6$\,dB\,rad$^2$/Hz, $\dot E\le\SI{0.9}{\micro K/s}$, $\tau\gtrsim\SI{3}{s}$; needs $\Delta L\approx\SI{17}{m}$ & excluded unless long fibres in one arm \\
+RF phase noise & 2 DDS channels, one board, shared internally multiplied clock; single-pass AOMs & clock noise rejected by $-23$ to $-51$\,dB; with $\mathcal L=-105\ldots-125$\,dBc/Hz $\Rightarrow\tau\sim10^2$--$10^4$\,s & excluded if equal frequencies and orders \\
+intensity noise & no stabilisation; spectrum not measured & needs RIN $\approx-85$\,dB/Hz at 78--106\,kHz; typical $-110\ldots-130$ $\Rightarrow\tau\sim1$--100\,s & open \\
+pointing: beam-2 mirror tilts & $L=0.8,0.6,0.1^*$\,m, $f=\SI{200}{mm}$: $D=221,214,196$\,mm & needs $\approx2.5\,\mu$rad/$\sqrt{\mathrm{Hz}}$ per mirror at $\nu_r$; floor-borne via float: negligible & open only via on-board sources or resonances \\
+pointing: raised board (mirrors + lens) & support not yet specified & sway modes 20--300\,Hz; needs $\approx\SI{1.8}{\micro m}/\sqrt{\mathrm{Hz}}$ of beam-2 motion: $\sim10^{-3}\,g/\sqrt{\mathrm{Hz}}$ at the base ($Q=50$), or $\sim10^{-6}\,g/\sqrt{\mathrm{Hz}}$ with stacked resonances & open \\
+pointing: HCF tip & free length not yet specified & $l=30$--50\,mm $\Rightarrow f_1=220$--80\,Hz, $Q\sim10^3$--$10^4$: needs only $10^{-5}$--$10^{-6}\,g/\sqrt{\mathrm{Hz}}$ at the chamber & open, most sensitive \\
+shutter ringing at $t=0$ & --- & needs 13--27\,$\mu$rad of ringing exactly at $\nu_r$ (Eq.~\eqref{eq:coherent}) & unlikely alone \\
+evaporation, three-body, trap-light scattering & simulation, Sec.~\ref{sec:evaporation} & $\lesssim\SI{0.03}{s^{-1}}$ & excluded \\
+background gas; detection window & --- & needs $\tau_\mathrm{vac}\approx\SI{15}{ms}$; released atoms drain down the beam at 30--45\,ms & open (check MOT lifetime, imaging region) \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}{\footnotesize $^*$assumed M3--lens distance.}
+\end{table}
+
+The pointing requirement in more detail, for the three beam-2 mirrors with equal and uncorrelated angular noise $S_\phi^{1/2}$ at $\nu_r$:
+\begin{center}
+\small
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+$S_\phi^{1/2}$ per mirror & $S_{x_c}^{1/2}$ & $\dot E$ & time to gain \SI{4}{\micro K} & focus wander (50\,Hz band) \\
+\midrule
+10\,nrad/$\sqrt{\mathrm{Hz}}$ & 4\,nm/$\sqrt{\mathrm{Hz}}$ & \SI{0.004}{\micro K/s} & $\sim10^3$\,s & \SI{0.05}{\micro m} \\
+100\,nrad/$\sqrt{\mathrm{Hz}}$ & 36\,nm/$\sqrt{\mathrm{Hz}}$ & \SI{0.4}{\micro K/s} & 10\,s & \SI{0.5}{\micro m} \\
+1\,$\mu$rad/$\sqrt{\mathrm{Hz}}$ & 360\,nm/$\sqrt{\mathrm{Hz}}$ & \SI{41}{\micro K/s} & 0.1\,s & \SI{4.9}{\micro m} \\
+2.5\,$\mu$rad/$\sqrt{\mathrm{Hz}}$ & 0.9\,$\mu$m/$\sqrt{\mathrm{Hz}}$ & \SI{250}{\micro K/s} & 15\,ms & \SI{12}{\micro m} \\
+\bottomrule
+\end{tabular}
+\end{center}
+The last column is a built-in monitor: the facet sits at the focus of beam~2 ($w_0=\SI{20}{\micro m}$), so pointing large enough to explain $\tau=\SI{15}{ms}$ would modulate the coupling of beam~2 into the fibre by tens of per cent at 50--250\,Hz. Typical floor noise ($10^{-6}\,g/\sqrt{\mathrm{Hz}}$) on a rigid table gives $\sim\!20$\,nrad/$\sqrt{\mathrm{Hz}}$ per mirror for a $Q=50$ post resonance at \SI{100}{Hz} ($\tau\sim\SI{300}{s}$); pneumatic isolation of the board reduces it by a further 50--64\,dB at \SI{100}{Hz} ($T\approx10^{-3}$--$10^{-4}$), elastomer feet by $\approx28$\,dB.
+
+\clearpage
+\paragraph{Recommended measurements.}
+\begin{enumerate}[leftmargin=*]
+\item Intensity: photodiode after each AOM, 1\,Hz--\SI{500}{kHz}; RIN at 60--\SI{120}{kHz} (target $<-106$\,dB/Hz) and 100--\SI{500}{Hz} ($<-52$\,dB/Hz).
+\item Pointing: beam-2 power transmitted through the HCF and a quadrant photodiode at a known lever arm, 10\,Hz--1\,kHz (target $x_c<\SI{80}{nm}/\sqrt{\mathrm{Hz}}$ at $\nu_r$); accelerometer and tap test on the raised board and on the chamber at the fibre feedthrough; brace or damp the board, clamp the fibre closer to its tip.
+\item Phase: mixer phase detector on the two RF drives after the amplifiers, and heterodyne of the two beams, 10\,Hz--\SI{200}{kHz} (target $<-108$\,dB\,rad$^2$/Hz at 30--\SI{80}{kHz}).
+\item On the atoms: $\tau(P)$; $T(t)$ of the remaining atoms; parametric loss spectroscopy (intensity modulation near $2\nu_z$, phase modulation near $\nu_z$, pointing modulation near $\nu_r$); mechanical block of all resonant beams; MOT lifetime.
+\end{enumerate}
+
+\subsection{Including technical noise in the simulation}
+All mechanisms above fit the semiclassical model without changing its structure:
+\begin{itemize}[leftmargin=*]
+\item \emph{Pointing} is common to all atoms: time series of beam offsets and tilts (from spectra by spectral synthesis, or from driven damped oscillators for resonances) are applied to the beam origins at every step. The lattice field, site surfaces, band potentials and forces follow exactly, including anharmonicity and the spread of $\nu_r$; the time step resolves noise up to $\sim$kHz.
+\item \emph{Intensity noise} at acoustic frequencies is applied as a time-dependent depth factor $1+\epsilon(t)$ on $U_{1,2}$ (radial motion, exact). Near $2\nu_z$, where the axial motion is not resolved, it enters as stochastic band jumps with the rates of Eq.~\eqref{eq:golden_noise}, using matrix elements of $V_\mathrm{lat}$ tabulated against $s$.
+\item \emph{Lattice phase noise} near $\nu_z$ enters the same way, with matrix elements of $\partial_\xi V_\mathrm{lat}$ ($\Delta n$ odd).
+\item \emph{Validation}: harmonic test traps must reproduce Eqs.~\eqref{eq:heat_pos}--\eqref{eq:coherent}; zero noise must reproduce the conservative results exactly.
+\end{itemize}
+
+%=======================================================================
 \section{Numerical implementation}
 \label{sec:numerics}
 %=======================================================================
@@ -487,6 +702,14 @@ Further scales: $d=\SI{532}{nm}$ ($\approx3760$ sites in \SI{2}{mm}); $mgd/\kB=\
 \bibitem{Hilton2018} A.~P.~Hilton, C.~Perrella, F.~Benabid, B.~M.~Sparkes, A.~N.~Luiten, and P.~S.~Light, ``High-efficiency cold-atom transport into a waveguide trap,'' Phys.\ Rev.\ Applied \textbf{10}, 044034 (2018); arXiv:1802.05396. --- \emph{Atoms falling into a kagome HCF through a red-detuned optical funnel.}
 
 \bibitem{Hairer2006} E.~Hairer, C.~Lubich, and G.~Wanner, \emph{Geometric Numerical Integration}, 2nd ed.\ (Springer, Berlin, 2006).
+
+\bibitem{Savard1997} T.~A.~Savard, K.~M.~O'Hara, and J.~E.~Thomas, ``Laser-noise-induced heating in far-off resonance optical traps,'' Phys.\ Rev.\ A \textbf{56}, R1095 (1997). --- \emph{Heating by intensity and pointing noise.}
+
+\bibitem{Gehm1998} M.~E.~Gehm, K.~M.~O'Hara, T.~A.~Savard, and J.~E.~Thomas, ``Dynamics of noise-induced heating in atom traps,'' Phys.\ Rev.\ A \textbf{58}, 3914 (1998).
+
+\bibitem{Jauregui2001} R.~Jáuregui, ``Nonperturbative and perturbative treatments of parametric heating in atom traps,'' Phys.\ Rev.\ A \textbf{64}, 053408 (2001).
+
+\bibitem{Timoshenko} S.~P.~Timoshenko, D.~H.~Young, and W.~Weaver, \emph{Vibration Problems in Engineering}, 4th ed.\ (Wiley, New York, 1974). --- \emph{Driven oscillators, transmissibility, bending modes of beams.}
 
 \end{thebibliography}
 
