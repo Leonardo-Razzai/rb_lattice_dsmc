@@ -10,3 +10,7 @@ results/trap/
 *.fdb_latexmk
 *.out
 *.toc
+.venv/
+venv/
+logs/
+.*.tmp.npz

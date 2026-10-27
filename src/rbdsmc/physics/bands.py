@@ -31,6 +31,8 @@ import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.linalg import eigh_tridiagonal
 
+from ..io.cache import save_npz_atomic
+
 
 # ----------------------------------------------------------------------------
 # Core diagonalisation
@@ -161,8 +163,7 @@ class BandTable:
             return cls(z["s_grid"], z["E_mean"], z["E_min"], z["E_max"], z["dEds"],
                        json.loads(str(z["meta"])))
         tab = cls.compute(**defaults)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        np.savez(path, s_grid=tab.s_grid, E_mean=tab.E_mean, E_min=tab.E_min,
+        save_npz_atomic(path, s_grid=tab.s_grid, E_mean=tab.E_mean, E_min=tab.E_min,
                  E_max=tab.E_max, dEds=tab.dEds_grid, meta=json.dumps(tab.meta))
         return tab
 

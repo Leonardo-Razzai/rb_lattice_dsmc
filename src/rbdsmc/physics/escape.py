@@ -120,6 +120,8 @@ def escape_table_for(trap, cfg, cache_dir="results/cache", n_max=None, slab_site
     import hashlib
     import json
     from pathlib import Path
+
+    from ..io.cache import save_npz_atomic
     if n_max is None:
         zz = np.linspace(trap.z_c - trap.z_half, trap.z_c + trap.z_half, 201)
         L = trap.lat.local(np.column_stack([trap.x_center(zz), 0 * zz, zz]))
@@ -142,6 +144,5 @@ def escape_table_for(trap, cfg, cache_dir="results/cache", n_max=None, slab_site
         tab.E_rel, tab.z_nodes = zf["E_rel"], zf["z_nodes"]
         return tab
     tab = EscapeTable(trap, j_min, j_max, n_max, slab_sites=slab_sites)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    np.savez(path, j_nodes=tab.j_nodes, n_max=tab.n_max, E_rel=tab.E_rel, z_nodes=tab.z_nodes)
+    save_npz_atomic(path, j_nodes=tab.j_nodes, n_max=tab.n_max, E_rel=tab.E_rel, z_nodes=tab.z_nodes)
     return tab

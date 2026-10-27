@@ -28,6 +28,7 @@ from numpy.polynomial.hermite import hermgauss
 from scipy.special import eval_hermite, gammaln
 
 from ..constants import A_SCAT, HBAR, M_RB
+from ..io.cache import save_npz_atomic
 from .bands import overlap_tensor
 
 S_BOSE = 2.0
@@ -116,8 +117,7 @@ class OverlapTable:
             z = np.load(path)
             return cls(z["s_grid"], z["I"])
         tab = cls.compute(verbose=verbose, **p)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        np.savez_compressed(path, s_grid=tab.s_grid, I=tab.I)
+        save_npz_atomic(path, compressed=True, s_grid=tab.s_grid, I=tab.I)
         return tab
 
     def _weights(self, s):

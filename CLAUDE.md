@@ -7,6 +7,9 @@ Read first: `docs/framing.md` (problem and agreed decisions), `docs/theory/physi
 diagnosis of the measured lifetime), `README.md` (layout and commands).
 
 ## Commands
+Use the project's virtual environment `.venv` (see README "Setup"): on Windows run Python as
+`.venv\Scripts\python.exe` or activate it first (`source .venv/Scripts/activate` in Git Bash);
+on Linux/macOS `source .venv/bin/activate`. Never install packages into the system Python.
 ```bash
 pip install -e ".[dev]"               # first time (pyarrow, duckdb, pytest, ...)
 pytest                                # or: python tests/run_tests.py [substring]   (~1.5 min)
@@ -16,6 +19,8 @@ python plotting/plot_compare.py results/runs/A results/runs/B --name NAME [--log
 python scripts/inspect_trap.py configs/test_simplest.yaml && python plotting/plot_trap.py
 python scripts/analyse_perturbations.py configs/test_simplest.yaml    # HOM / theta
 python scripts/analyse_noise.py && python plotting/plot_analysis.py   # noise thresholds
+python scripts/make_scan_list.py CONFIG --grid key=a,b --out configs/scans/X.txt   # scans
+python scripts/run_list.py configs/scans/X.txt [--line N] [--dry-run]
 cd docs/theory && latexmk -pdf physics_and_methods.tex && latexmk -c
 ```
 Band (~40 s), escape (~20 s per geometry) and overlap (~2 min) tables are cached in
@@ -39,6 +44,10 @@ git-ignored too (regenerable); figures under `results/figures/` are tracked.
 - Plot scripts read result files only; they never import the simulation package.
 - `beams.py`/`modes.py` support higher-order modes (LG, HG, ModeSum) via `optics.beam_up.modes`.
 
+Cluster: DIFA OPH (Slurm), job scripts in `scripts/slurm/` (README "Running on the DIFA
+cluster"). Never run simulations on the frontends; caches are written atomically
+(`rbdsmc.io.cache.save_npz_atomic`) because array tasks share `results/cache/`.
+
 ## Conventions
 - SI internally; YAML keys carry units (`power_W`, `z_center_mm`, `T0_uK`).
 - Energies in the time series are per atom, from the classical minimum of the atom's own site
@@ -48,8 +57,8 @@ git-ignored too (regenerable); figures under `results/figures/` are tracked.
   raises NotImplementedError.
 
 ## Status (27 Oct 2026)
-Steps 1–4 done (fields, bands, semiclassical dynamics, observables/storage, collisions), 64 tests
-passing. Simplest case: collisionless plateau 13.6% bound, 4.85% enter the fiber, no late decay.
+Steps 1–4 done (fields, bands, semiclassical dynamics, observables/storage, collisions), 66 tests
+passing; scan tools and Slurm scripts added. Simplest case: collisionless plateau 13.6% bound, 4.85% enter the fiber, no late decay.
 Measured in the lab: τ ≈ 15 ms after 40 ms → needs ≈ 200 µK/s heating; not explained by the model.
 Laser IPG YLR-20-1064-LP-SF (<50 kHz), ΔL ≈ 1 m; two DDS channels on one board (shared,
 internally multiplied clock), single-pass AOMs; no intensity stabilisation; 400 nW residual cooler +
