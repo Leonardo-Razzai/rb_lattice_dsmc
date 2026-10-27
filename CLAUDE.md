@@ -9,7 +9,7 @@ diagnosis of the measured lifetime), `README.md` (layout and commands).
 ## Commands
 Use the project's virtual environment `.venv` (see README "Setup"): on Windows run Python as
 `.venv\Scripts\python.exe` or activate it first (`source .venv/Scripts/activate` in Git Bash);
-on Linux/macOS `source .venv/bin/activate`. Never install packages into the system Python.
+on Linux/macOS/WSL `source .venv/bin/activate`. Never install packages into the system Python.
 ```bash
 pip install -e ".[dev]"               # first time (pyarrow, duckdb, pytest, ...)
 pytest                                # or: python tests/run_tests.py [substring]   (~1.5 min)

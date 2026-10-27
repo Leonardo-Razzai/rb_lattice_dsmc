@@ -51,6 +51,41 @@ system Python and the project can be reproduced exactly.
 An alternative is a conda environment (Miniforge): `conda create -n rbdsmc python=3.12`, then
 `conda activate rbdsmc` and `pip install -e ".[dev]"`. Use one or the other, not both.
 
+### Windows with WSL (Ubuntu) — recommended for development
+
+The code then runs in Linux, exactly as on the cluster.
+
+1. **In the Ubuntu terminal**, install the system tools once (Ubuntu 24.04 ships Python 3.12;
+   22.04 ships 3.10, which also works):
+   ```bash
+   sudo apt update && sudo apt install -y python3-venv python3-pip git
+   git config --global user.name "Name Surname"
+   git config --global user.email "name.surname00@unibo.it"
+   ```
+2. **Keep the repository in the Linux file system** (`~/code`), not under `/mnt/c/...`: file access
+   across the Windows boundary is much slower and confuses file watchers.
+   ```bash
+   mkdir -p ~/code && cd ~/code
+   cp /mnt/c/Users/<you>/Downloads/rb_lattice_dsmc.bundle .
+   git clone rb_lattice_dsmc.bundle rb_lattice_dsmc && cd rb_lattice_dsmc
+   git remote remove origin
+   python3 -m venv .venv && source .venv/bin/activate
+   python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+   python tests/run_tests.py
+   ```
+3. **Open it in VS Code from Ubuntu**: `code .` in the repository folder. The first time this
+   installs the VS Code server in WSL; the window title then shows `[WSL: Ubuntu]`. (VS Code needs
+   the *WSL* extension on the Windows side; from VS Code itself: `F1` → *WSL: Connect to WSL*, then
+   *File → Open Folder* → `/home/<user>/code/rb_lattice_dsmc`.)
+4. **Install the extensions inside WSL**: in the Extensions view, *Claude Code* and *Python* show an
+   **Install in WSL: Ubuntu** button. Extensions installed only on Windows do not run in a WSL window.
+   Open the Claude Code panel (Spark icon) and sign in again: the WSL side keeps its own login.
+5. **Select the interpreter** `.venv/bin/python` (`Ctrl+Shift+P` → *Python: Select Interpreter*).
+   Claude Code runs its commands in WSL, so the Linux commands of this README apply.
+6. **Files from Windows**: the repository appears in Explorer as `\\wsl$\Ubuntu\home\<user>\code`.
+   SSH keys and `~/.ssh/config` for the cluster live in Ubuntu (`~/.ssh`), separate from Windows'.
+7. **LaTeX (optional)**: `sudo apt install -y latexmk texlive-latex-extra texlive-science`.
+
 ### Linux / macOS
 
 ```bash
