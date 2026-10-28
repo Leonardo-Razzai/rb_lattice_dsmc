@@ -12,45 +12,6 @@ matplotlib, pandas; pytest for the tests) are installed from `pyproject.toml` in
 environment, a private folder `.venv/` with its own Python and packages, so nothing touches the
 system Python and the project can be reproduced exactly.
 
-### Windows (virtual environment with `venv`)
-
-1. **Install Python** from [python.org](https://www.python.org/downloads/windows/) (3.12, 64-bit).
-   The installer also installs the `py` launcher; check with `py -0` (lists installed versions).
-   Install [Git for Windows](https://git-scm.com/download/win) too (Claude Code needs it).
-2. **Put the repository outside OneDrive** (cloud sync of the thousands of files in `.venv` is slow
-   and can corrupt it), e.g. `C:\Users\<you>\code\rb_lattice_dsmc`.
-3. **Create and fill the environment** (PowerShell, in the repository folder):
-   ```powershell
-   py -3.12 -m venv .venv
-   .\.venv\Scripts\Activate.ps1        # if blocked: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-   python -m pip install --upgrade pip
-   python -m pip install -e ".[dev]"   # -e: edits to src/ take effect without reinstalling
-   python tests\run_tests.py           # or: pytest   (~1.5 min, first run builds the caches)
-   ```
-4. **Daily use.** Open a terminal in the repository and activate the environment; the prompt then
-   starts with `(.venv)` and `python` is the project's Python:
-   ```powershell
-   .\.venv\Scripts\Activate.ps1                  # PowerShell
-   .venv\Scripts\activate.bat                    # cmd.exe
-   source .venv/Scripts/activate                 # Git Bash (the shell Claude Code uses on Windows)
-   python scripts\run_single.py configs\test_simplest.yaml --set numerics.t_end_ms=50
-   deactivate                                    # leave the environment
-   ```
-   Without activating, call the environment's Python directly:
-   `.\.venv\Scripts\python.exe scripts\run_single.py ...`.
-   In PowerShell, quote overrides that contain spaces or brackets with single quotes, e.g.
-   `--set 'optics.beam_up.modes=[{type: LG, p: 1, l: 0, coeff: [0.1, 0]}]'`.
-5. **VS Code.** Install the *Python* extension, then `Ctrl+Shift+P` → *Python: Select Interpreter*
-   → `.\.venv\Scripts\python.exe`. New terminals then activate `.venv` automatically and the
-   *Testing* panel runs the tests. Claude Code is told in `CLAUDE.md` to use `.venv`.
-6. **Updating.** After pulling changes that modify `pyproject.toml`, rerun
-   `python -m pip install -e ".[dev]"`. To start from scratch, delete `.venv` and repeat step 3.
-7. **LaTeX notes (optional).** [MiKTeX](https://miktex.org/) provides `pdflatex`; `latexmk` also needs
-   Perl ([Strawberry Perl](https://strawberryperl.com/)). Without Perl, run `pdflatex` twice.
-
-An alternative is a conda environment (Miniforge): `conda create -n rbdsmc python=3.12`, then
-`conda activate rbdsmc` and `pip install -e ".[dev]"`. Use one or the other, not both.
-
 ### Windows with WSL (Ubuntu) — recommended for development
 
 The code then runs in Linux, exactly as on the cluster.
