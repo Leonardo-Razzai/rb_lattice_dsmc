@@ -77,6 +77,7 @@ python scripts/run_single.py configs/test_simplest.yaml [--set numerics.t_end_ms
 python plotting/plot_timeseries.py [--log-y|--both] results/runs/<run_id>   # -> results/figures/runs/
 python scripts/run_single.py configs/test_simplest.yaml --set physics.collisions=true
 python plotting/plot_compare.py results/runs/A results/runs/B --name my_comparison [--log-y]
+python plotting/plot_scan.py results/runs/theta_* --name theta [--log-y]   # scan: fractions vs t, steady fraction vs theta per z_c
 ```
 
 Collisions are switched on with `physics.collisions: true`; cell sizes and the overlap-table

@@ -16,6 +16,7 @@ pytest                                # or: python tests/run_tests.py [substring
 python scripts/run_single.py configs/test_simplest.yaml [--set key=value ...]
 python plotting/plot_timeseries.py --both results/runs/<run_id>
 python plotting/plot_compare.py results/runs/A results/runs/B --name NAME [--log-y]
+python plotting/plot_scan.py results/runs/theta_* --name theta [--vary theta_rad --group z_center_mm]
 python scripts/inspect_trap.py configs/test_simplest.yaml && python plotting/plot_trap.py
 python scripts/analyse_perturbations.py configs/test_simplest.yaml    # HOM / theta
 python scripts/analyse_noise.py && python plotting/plot_analysis.py   # noise thresholds
